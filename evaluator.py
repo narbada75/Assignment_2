@@ -203,4 +203,4 @@ def evaluate_file(input_path: str) -> list[dict]:
 if __name__ == "__main__":
     if os.path.exists("sample_input.txt"):
         res = evaluate_file("sample_input.txt")
-        print("Successfully generated output.txt based on sample_input.txt")
+        print("Successfully generated the output.txt based on sample_input.txt")
