@@ -1,6 +1,15 @@
 import string
 
 def encrypt_text(input_file, output_file, shift1, shift2):
+    """
+    Encrypt text from input file using custom shift rules.
+    
+    Args:
+        input_file (str): Path to the input file to encrypt.
+        output_file (str): Path to write the encrypted output.
+        shift1 (int): First shift parameter.
+        shift2 (int): Second shift parameter.
+    """
     try:
         with open(input_file, 'r') as f:
             content = f.read()
@@ -12,9 +21,11 @@ def encrypt_text(input_file, output_file, shift1, shift2):
     for c in content:
         if 'a' <= c <= 'm':
             # Shift forward by shift1 * shift2
+            # Wrap-around modulo ensures result stays within a-z range (0-25)
             encrypted += chr((ord(c) - 97 + (shift1 * shift2)) % 26 + 97)
         elif 'n' <= c <= 'z':
             # Shift backward by shift1 + shift2
+            # Modulo 26 handles negative wrap-around correctly
             encrypted += chr((ord(c) - 97 - (shift1 + shift2)) % 26 + 97)
         elif 'A' <= c <= 'M':
             # Shift backward by shift1
@@ -31,7 +42,16 @@ def encrypt_text(input_file, output_file, shift1, shift2):
     print(f"Successfully encrypted to '{output_file}'.")
 
 def create_decrypt_map(shift1, shift2):
-    """Creates a reverse mapping to safely handle character wrapping."""
+    """
+    Creates a reverse mapping to safely handle character wrapping.
+    
+    Args:
+        shift1 (int): First shift parameter.
+        shift2 (int): Second shift parameter.
+    
+    Returns:
+        dict: Mapping from encrypted characters to original characters.
+    """
     rev_map = {}
     for c in string.ascii_lowercase:
         if 'a' <= c <= 'm':
@@ -49,6 +69,15 @@ def create_decrypt_map(shift1, shift2):
     return rev_map
 
 def decrypt_text(input_file, output_file, shift1, shift2):
+    """
+    Decrypt text from input file using the reverse mapping.
+    
+    Args:
+        input_file (str): Path to the encrypted file.
+        output_file (str): Path to write the decrypted output.
+        shift1 (int): First shift parameter.
+        shift2 (int): Second shift parameter.
+    """
     rev_map = create_decrypt_map(shift1, shift2)
     try:
         with open(input_file, 'r') as f:
@@ -69,11 +98,18 @@ def decrypt_text(input_file, output_file, shift1, shift2):
     print(f"Successfully decrypted to '{output_file}'.")
 
 def verify_decryption(original_file, decrypted_file):
+    """
+    Verify that the decrypted text matches the original text.
+    
+    Args:
+        original_file (str): Path to the original file.
+        decrypted_file (str): Path to the decrypted file.
+    """
     try:
         with open(original_file, 'r') as f1, open(decrypted_file, 'r') as f2:
             original = f1.read()
             decrypted = f2.read()
-       
+        
         if original == decrypted:
             print("Verification successful: Decrypted text matches the original.")
         else:
@@ -82,6 +118,7 @@ def verify_decryption(original_file, decrypted_file):
         print("Error: Files missing for verification.")
 
 def main():
+    """Main function to orchestrate encryption, decryption, and verification."""
     print("--- Question 1: Encryption & Decryption ---")
     try:
         shift1 = int(input("Enter shift1 value: "))
